@@ -12,20 +12,23 @@ class Fraction:
         PRE : 'num' et 'den' doivent être des nombres entiers
         POST : crée un objet Fraction avec ses paramètres
         RAISE : TypeError si le numérateur ou dénominateur ne sont pas des nombres entiers
-                ValueError si le dénominateur == 0
+                ZeroDivisionError si le dénominateur == 0
         """
-        try:
-            if  type(num) != int or type(den) != int:
-                raise TypeError("Le numérateur et le dénominateur doivent être des nombres entiers")
-            elif den == 0:
-                raise ValueError("Le dénominateur doit être différent de 0")
-            self.__num = num
-            self.__den = den
 
-        except TypeError as e:
-            print(e)
-        except ValueError as e:
-            print(e)
+        if  type(num) != int or type(den) != int:
+            raise TypeError("Le numérateur et le dénominateur doivent être des nombres entiers")
+
+        if den == 0:
+            raise ZeroDivisionError("Le dénominateur doit être différent de 0")
+
+        diviseur_commun = 1
+        for diviseur in range(1, den + 1):
+            if (num % diviseur) == 0 and (den % diviseur) == 0:
+                diviseur_commun = diviseur
+
+        self.__num = num // diviseur_commun
+        self.__den = den // diviseur_commun
+
 
     @property
     def numerator(self):
@@ -60,15 +63,11 @@ class Fraction:
         if self.is_zero():
             return "0"
         elif nbre_entier == 0:
-            diviseur_commun = 1
-            for diviseur in range(1, self.numerator + 1):
-                if (self.numerator % diviseur) == 0 and (self.denominator % diviseur) == 0:
-                    diviseur_commun = diviseur
-            return f"{self.numerator // diviseur_commun}/{self.denominator // diviseur_commun}"
+            return f"{self.numerator}/{self.denominator}"
         elif self.is_integer():
             return str(nbre_entier)
         else:
-            return f"{nbre_entier} {self.numerator - (nbre_entier * self.denominator)}/{self.denominator}"
+            return f"{nbre_entier} + {self.numerator - (nbre_entier * self.denominator)}/{self.denominator}"
 
     # ------------------ Operators overloading ------------------
 
@@ -76,7 +75,7 @@ class Fraction:
         """Overloading of the + operator for fractions
 
          PRE : other est un objet de la classe Fraction
-         POST : renvoi le résultat de self + other qui sont tous les 2 des fractions
+         POST : renvoi un nouvel objet Fraction qui est le résultat de self + other qui sont tous les 2 des fractions
          """
         if self.denominator == other.denominator:
             num = self.numerator + other.numerator
@@ -91,7 +90,7 @@ class Fraction:
         """Overloading of the - operator for fractions
 
         PRE : other est un objet de la classe Fraction
-        POST : renvoi le résultat de self - other qui sont tous les 2 des fractions
+        POST : renvoi un nouvel objet Fraction qui est le résultat de self - other qui sont tous les 2 des fractions
         """
         if self.denominator == other.denominator:
             num = self.numerator - other.numerator
@@ -106,7 +105,7 @@ class Fraction:
         """Overloading of the * operator for fractions
 
         PRE : other est un objet de la classe Fraction
-        POST : renvoi le résultat de self * other qui sont tous les 2 des fractions
+        POST : renvoi un nouvel objet Fraction qui est le résultat de self * other qui sont tous les 2 des fractions
         """
         num = self.numerator * other.numerator
         den = self.denominator * other.denominator
@@ -117,8 +116,11 @@ class Fraction:
         """Overloading of the / operator for fractions
 
         PRE : other est un objet de la classe Fraction
-        POST : renvoi le résultat de self / other qui sont tous les 2 des fractions
+        POST : renvoi un nouvel objet Fraction qui est le résultat de self / other qui sont tous les 2 des fractions
+        RAISE : ZeroDivisionError si other = 0
         """
+        if other.is_zero():
+            raise ZeroDivisionError("Division par zéro pas possible")
         num = self.numerator * other.denominator
         den = self.denominator * other.numerator
 
@@ -128,7 +130,7 @@ class Fraction:
         """Overloading of the ** operator for fractions
 
         PRE : other est un objet de la classe Fraction
-        POST : renvoi le résultat de self ** other qui sont tous les 2 des fractions
+        POST : renvoi un nouvel objet Fraction qui est le résultat de self ** other qui sont tous les 2 des fractions
         """
         exposant = other.numerator / other.denominator
 
@@ -152,7 +154,7 @@ class Fraction:
         PRE : self.denominator doit être différent de 0
         POST : renvoi un float qui est la valeur décimale de la fraction
         """
-        return str(self.numerator/self.denominator)
+        return self.numerator/self.denominator
 
     # TODO : [BONUS] You can overload other operators if you wish (ex : <, >, ...)
 
@@ -169,7 +171,7 @@ class Fraction:
     def is_integer(self):
         """Check if a fraction is integer (ex : 8/4, 3, 2/2, ...)
 
-        PRE : self.denominator doit être différent de 0
+        PRE : le dénominateur doit être différent de 0
         POST : renvoie True si la fraction représente un entier et False si non
         """
         return self.numerator % self.denominator == 0
@@ -177,7 +179,7 @@ class Fraction:
     def is_proper(self):
         """Check if the absolute value of the fraction is < 1
 
-        PRE : self.denominator doit être différent de 0
+        PRE : le dénominateur doit être différent de 0
         POST : renvoi True si la valeur absolue de la fraciton est plus grande que 1 et False sinon
         """
 
@@ -205,21 +207,22 @@ class Fraction:
         PRE : other est un objet de la classe Fraction
         POST : renvoi True is il y a que 1 unité de différence entre self et other
         """
-        return self.__sub__(self, other).is_unit().__abs__() == 1
+        return (self - other).is_unit()
 
 
 
 if __name__ == "__main__":
-    a = Fraction(3,6)
+    a = Fraction(3,3)
     b = Fraction(1, 3)
     c = Fraction(2, 2)
     d = Fraction(2, 6)
-    print(a)
-    print(c)
-    print(a.__sub__(b))
-    print((a.__add__(b)))
-    print(b.__mul__(c))
-    print(a.__truediv__(b))
-    print(b.__eq__(d))
-    print(a.__eq__(b))
-    print(c.__float__())
+    print(f"3/3 = {a}")
+    print(f"2/6 = {d}")
+    print(f"3/3 - 1/3 = {a - b}")
+    print(f"3/3 + 1/3 = {a + b}")
+    print(f"1/3 * 2/2 = {b * c}")
+    print(f"3/3 / 1/3 = {a/b}")
+    print(f"1/3 == 2/6 {b == d}")
+    print(f"3/3 == 1/3 {a == b}")
+    print(f"1/3 = {float(b)}")
+    print(a.is_adjacent_to(b))
