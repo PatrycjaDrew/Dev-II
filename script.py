@@ -52,9 +52,9 @@ def ajout_dictionnaire(nom, prenom, points):
     """
     eleve = f"{nom} {prenom}"
     if eleve in ensemble_eleves:
-        ensemble_eleves[eleve].append(int(points))
+        ensemble_eleves[eleve].append(float(points))
     else:
-        ensemble_eleves[eleve] = [int(points)]
+        ensemble_eleves[eleve] = [float(points)]
 
 
 def ajout_points(nom_fichier):
@@ -89,11 +89,12 @@ def pointsCorrect(points):
             raise ValueError("Les points ne peuvent pas être négatifs !")
         if int(points) > 20:
             raise ValueError("Les points doivent être compris entre 0 et 20 !")
-        if points.isdigit() and int(points) > 0 and int(points) < 20:
+        if points.isdigit()  and int(points) >= 0 and int(points) <= 20:
             return True
 
     except ValueError as e:
         print(e)
+        return False
 
 
 def affiche(point_ou_moyenne, ordre, qui):
