@@ -68,7 +68,7 @@ def ajout_points(nom_fichier):
     prenom = input("Quel est le prénom de l'élève : ").strip()
     nom = input("Quel est le nom de l'élève : ").strip()
     points = input("Quel est la note sur 20 de l'élève : ").strip()
-    while not pointsCorrect(points):
+    while not points_correct(points):
         points = input("Quel est la note sur 20 de l'élève : ").strip()
 
     with open(nom_fichier, 'a') as file:
@@ -77,7 +77,8 @@ def ajout_points(nom_fichier):
     ajout_dictionnaire(nom, prenom, points)
     print("Les points ont été écrits dans le fichier\n")
 
-def pointsCorrect(points):
+
+def points_correct(points):
     """
     PRE : points qui doit être une chaine de caractère
     POST : retourne True si points est un nombre compris entre 0 et 20
@@ -89,7 +90,7 @@ def pointsCorrect(points):
             raise ValueError("Les points ne peuvent pas être négatifs !")
         if int(points) > 20:
             raise ValueError("Les points doivent être compris entre 0 et 20 !")
-        if points.isdigit()  and int(points) >= 0 and int(points) <= 20:
+        if points.isdigit() and 0 <= int(points) <= 20:
             return True
 
     except ValueError as e:
@@ -126,7 +127,7 @@ def affiche(point_ou_moyenne, ordre, qui):
 
 
 def demarre():
-    reponse_utilisateur = ""
+    reponse_utilisateur = " "
 
     while reponse_utilisateur.lower() != 'fin':
         print("Pour étaindre le programme écrivez 'fin'")
@@ -174,7 +175,6 @@ def demarre():
         elif reponse_utilisateur.lower() != "fin":
             print("Commande introuvable\n"
                   "les commandes sont : A,B,C ou fin\n")
-
 
 
 demarre()
