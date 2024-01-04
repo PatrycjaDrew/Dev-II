@@ -9,7 +9,7 @@ class Fraction:
     def __init__(self, num=0, den=1):
         """This builds a fraction based on some numerator and denominator.
 
-        PRE : 'num' et 'den' doivent être des nombres entiers
+        PRE : -
         POST : crée un objet Fraction avec ses paramètres
         RAISE : TypeError si le numérateur ou dénominateur ne sont pas des nombres entiers
                 ZeroDivisionError si le dénominateur == 0
