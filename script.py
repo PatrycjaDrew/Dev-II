@@ -1,6 +1,14 @@
 ensemble_eleves = {}
 fichier = "aucun fichier n'a été ouvert\n"
+
+
 def ouverture_fichier(nom_fichier):
+    """
+    PRE : nom_fichier doit être le nom d'un fichier qui contient sur chaque ligne un nom, un prénom et des points
+    POST : ajoute le contenu du fichier dans un dictionnaire,
+           change le contenu de la variable fichier
+           affiche un message que le fichier a été correctement ouvert
+    """
     global fichier
     try:
         with open(nom_fichier) as file:
@@ -19,16 +27,28 @@ def ouverture_fichier(nom_fichier):
 
 
 def moyenne(liste_points):
+    """
+    PRE : liste_points doit être une liste qui n'est pas vide et qui contient des nombres
+    POST : retourne la moyenne de tous les points contenu dans lite_points
+    """
     if len(liste_points) == 1:
         return liste_points[0]
     else:
         total = 0
         for point in liste_points:
             total += point
-        return total/len(liste_points)
+        return total / len(liste_points)
 
 
 def ajout_dictionnaire(nom, prenom, points):
+    """
+    PRE : nom et prenom doivent être des chaines de caractère
+          points doit être une chaine de caractère qui représente un nombre
+    POST : ajout des élèves dans le dictionnaire ensemble_eleves
+           si l'élève est déjà dans le dictionnaire, ses points sont ajouter a la liste déjà existante
+           si l'élève n'est pas dans le dictionnaire, création d'une nouvelle entrée  dans le dictionnaire
+           avec ses points
+    """
     eleve = f"{nom} {prenom}"
     if eleve in ensemble_eleves:
         ensemble_eleves[eleve].append(int(points))
@@ -37,6 +57,13 @@ def ajout_dictionnaire(nom, prenom, points):
 
 
 def ajout_points(nom_fichier):
+    """
+    PRE : nom_fichier est le nom d'un fichier texte
+          prenom et nom doivent être des chaines de caractères qui représente le nom et prénom de l'élève
+          points doit être un nombre qui représente les points de l'élève
+    POST : ajout dans le fichier nom_fichier d'une nouvelle ligne qui contient le nom, prénom et points d'un élève
+           ajout dans le dictionnaire ensemble_eleves le nouvel élève qui a été enregisté
+    """
     prenom = input("Quel est le prénom de l'élève : ").strip()
     nom = input("Quel est le nom de l'élève : ").strip()
     points = input("Quel est la note sur 20 de l'élève : ").strip()
@@ -48,6 +75,13 @@ def ajout_points(nom_fichier):
 
 
 def affiche(point_ou_moyenne, ordre, qui):
+    """
+    PRE : point_ou_moyenne doit être soit 'P' soit 'M'
+          ordre doit être soit 'D' soit 'C'
+          qui doit être soit 'T' ou 'R' ou 'E'
+    POST : ajoute au fichier eleves.txt tous le contenu du dictionnaire ensemble_eleves
+           affiche à l'utilisateur la liste des élèves qu'il a demandé de voir
+    """
     with open("eleves.txt", "w") as file:
         ensemble_eleves_triee = sorted(ensemble_eleves.items(), key=lambda x: moyenne(x[1]))
         if ordre == 'D':
@@ -66,7 +100,6 @@ def affiche(point_ou_moyenne, ordre, qui):
             elif qui == 'E' and moyenne(value) < 10:
                 print(ligne_affichee)
         print("\n")
-
 
 
 reponse_utilisateur = ""
@@ -102,8 +135,8 @@ while reponse_utilisateur.lower() != 'fin':
                     raise ValueError("L'entrée est invalide, écrivez T, R ou E")
 
                 quel_affichage = input("Voulez vous afficher\n"
-                                 "M : uniquement les moyennes\n"
-                                 "P : les moyennes avec tous les points >>").upper().strip()
+                                       "M : uniquement les moyennes\n"
+                                       "P : les moyennes avec tous les points >>").upper().strip()
                 if quel_affichage not in ['M', 'P']:
                     raise ValueError("L'entrée est invalide, écrivez M ou P")
 
