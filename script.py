@@ -8,6 +8,7 @@ def ouverture_fichier(nom_fichier):
     POST : ajoute le contenu du fichier dans un dictionnaire,
            change le contenu de la variable fichier
            affiche un message que le fichier a été correctement ouvert
+           FileNotFoundError si le fichier n'existe pas
     """
     global fichier
     try:
@@ -67,11 +68,32 @@ def ajout_points(nom_fichier):
     prenom = input("Quel est le prénom de l'élève : ").strip()
     nom = input("Quel est le nom de l'élève : ").strip()
     points = input("Quel est la note sur 20 de l'élève : ").strip()
+    while not pointsCorrect(points):
+        points = input("Quel est la note sur 20 de l'élève : ").strip()
+
     with open(nom_fichier, 'a') as file:
         file.write(f"\n{prenom} {nom} {points}")
 
     ajout_dictionnaire(nom, prenom, points)
     print("Les points ont été écrits dans le fichier\n")
+
+def pointsCorrect(points):
+    """
+    PRE : points qui doit être une chaine de caractère
+    POST : retourne True si points est un nombre compris entre 0 et 20
+    """
+    try:
+        if not points.isdigit():
+            raise ValueError("Les points doivent être des nombres !")
+        if int(points) < 0:
+            raise ValueError("Les points ne peuvent pas être négatifs !")
+        if int(points) > 20:
+            raise ValueError("Les points doivent être compris entre 0 et 20 !")
+        if points.isdigit() and int(points) > 0 and int(points) < 20:
+            return True
+
+    except ValueError as e:
+        print(e)
 
 
 def affiche(point_ou_moyenne, ordre, qui):
@@ -102,51 +124,56 @@ def affiche(point_ou_moyenne, ordre, qui):
         print("\n")
 
 
-reponse_utilisateur = ""
+def demarre():
+    reponse_utilisateur = ""
 
-while reponse_utilisateur.lower() != 'fin':
-    print("Pour étaindre le programme écrivez 'fin'")
-    print("Que voulez vous faire?\n"
-          "A : ouvrir un fichier\n"
-          "B : écrire dans le fichier\n"
-          "C : afficher les résultats de tous les élèves\n")
-    reponse_utilisateur = input(">> ")
+    while reponse_utilisateur.lower() != 'fin':
+        print("Pour étaindre le programme écrivez 'fin'")
+        print("Que voulez vous faire?\n"
+              "A : ouvrir un fichier\n"
+              "B : écrire dans le fichier\n"
+              "C : afficher les résultats de tous les élèves\n")
+        reponse_utilisateur = input(">> ")
 
-    if reponse_utilisateur.upper().strip() == "A":
-        nouveau_fichier = input("nom du fichier : ")
-        ouverture_fichier(nouveau_fichier)
-    elif reponse_utilisateur.upper().strip() == 'B':
-        if fichier == "aucun fichier n'a été ouvert\n":
-            print("aucun fichier n'a été ouvert, vous devez d'abord ouvrir un fichier\n")
-        else:
-            ajout_points(fichier)
-    elif reponse_utilisateur.upper().strip() == 'C':
-        if ensemble_eleves == {}:
-            print("aucun élève a été enregistré dans le programme\n"
-                  "vous avez pas ouvert de fichier ou le fichier ouvert était vide\n")
-        else:
-            try:
-                qui_afficher = input("Voulez vous afficher le résultats de\n"
-                                     "T : tous les élèves\n"
-                                     "R : les élèves qui ont réussi\n"
-                                     "E : les élèves qui ont réussi\n"
-                                     ">> ").upper().strip()
-                if qui_afficher not in ['T', 'R', 'E']:
-                    raise ValueError("L'entrée est invalide, écrivez T, R ou E")
+        if reponse_utilisateur.upper().strip() == "A":
+            nouveau_fichier = input("nom du fichier : ")
+            ouverture_fichier(nouveau_fichier)
+        elif reponse_utilisateur.upper().strip() == 'B':
+            if fichier == "aucun fichier n'a été ouvert\n":
+                print("aucun fichier n'a été ouvert, vous devez d'abord ouvrir un fichier\n")
+            else:
+                ajout_points(fichier)
+        elif reponse_utilisateur.upper().strip() == 'C':
+            if ensemble_eleves == {}:
+                print("aucun élève a été enregistré dans le programme\n"
+                      "vous avez pas ouvert de fichier ou le fichier ouvert était vide\n")
+            else:
+                try:
+                    qui_afficher = input("Voulez vous afficher le résultats de\n"
+                                         "T : tous les élèves\n"
+                                         "R : les élèves qui ont réussi\n"
+                                         "E : les élèves qui ont réussi\n"
+                                         ">> ").upper().strip()
+                    if qui_afficher not in ['T', 'R', 'E']:
+                        raise ValueError("L'entrée est invalide, écrivez T, R ou E")
 
-                quel_affichage = input("Voulez vous afficher\n"
-                                       "M : uniquement les moyennes\n"
-                                       "P : les moyennes avec tous les points >>").upper().strip()
-                if quel_affichage not in ['M', 'P']:
-                    raise ValueError("L'entrée est invalide, écrivez M ou P")
+                    quel_affichage = input("Voulez vous afficher\n"
+                                           "M : uniquement les moyennes\n"
+                                           "P : les moyennes avec tous les points >>").upper().strip()
+                    if quel_affichage not in ['M', 'P']:
+                        raise ValueError("L'entrée est invalide, écrivez M ou P")
 
-                ordre = input("Croissant (C) ou Décroissant (D) >>").upper().strip()
-                if ordre not in ['C', 'P']:
-                    raise ValueError("L'entrée est invalide, écrivez C ou P")
+                    ordre = input("Croissant (C) ou Décroissant (D) >>").upper().strip()
+                    if ordre not in ['C', 'P']:
+                        raise ValueError("L'entrée est invalide, écrivez C ou P")
 
-                affiche(quel_affichage, ordre, qui_afficher)
-            except ValueError as e:
-                print(e)
-    elif reponse_utilisateur.lower() != "fin":
-        print("Commande introuvable\n"
-              "les commandes sont : A,B,C ou fin\n")
+                    affiche(quel_affichage, ordre, qui_afficher)
+                except ValueError as e:
+                    print(e)
+        elif reponse_utilisateur.lower() != "fin":
+            print("Commande introuvable\n"
+                  "les commandes sont : A,B,C ou fin\n")
+
+
+
+demarre()
