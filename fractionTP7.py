@@ -10,7 +10,7 @@ class Fraction:
         """This builds a fraction based on some numerator and denominator.
 
         PRE : -
-        POST : crée un objet Fraction avec ses paramètres
+        POST : crée un objet Fraction avec un dénominateur et un numérateur simplifié
         RAISE : TypeError si le numérateur ou dénominateur ne sont pas des nombres entiers
                 ZeroDivisionError si le dénominateur == 0
         """
