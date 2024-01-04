@@ -223,4 +223,7 @@ if __name__ == "__main__":
     print(f"1/3 == 2/6 {b == d}")
     print(f"3/3 == 1/3 {a == b}")
     print(f"1/3 = {float(b)}")
+    print(f"O/1 is_zero = {Fraction(0, 1).is_zero()}")
+    print(f"3/3 is_integer = {a.is_integer()}")
+    print(b.is_proper())
     print(a.is_adjacent_to(b))
