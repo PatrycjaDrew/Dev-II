@@ -15,7 +15,7 @@ class Fraction:
                 ZeroDivisionError si le dénominateur == 0
         """
 
-        if  type(num) != int or type(den) != int:
+        if type(num) != int or type(den) != int:
             raise TypeError("Le numérateur et le dénominateur doivent être des nombres entiers")
 
         if den == 0:
@@ -28,7 +28,6 @@ class Fraction:
 
         self.__num = num // diviseur_commun
         self.__den = den // diviseur_commun
-
 
     @property
     def numerator(self):
@@ -210,9 +209,8 @@ class Fraction:
         return (self - other).is_unit()
 
 
-
 if __name__ == "__main__":
-    a = Fraction(3,3)
+    a = Fraction(3, 3)
     b = Fraction(1, 3)
     c = Fraction(2, 2)
     d = Fraction(2, 6)
