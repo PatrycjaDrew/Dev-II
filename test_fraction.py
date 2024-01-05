@@ -135,3 +135,7 @@ class TestIsAdjacent(unittest.TestCase):
     def test_isAdjacent(self):
         self.assertTrue(Fraction(2, 1).is_adjacent_to(Fraction(1, 1)))
         self.assertFalse(Fraction(2, 7).is_adjacent_to(Fraction(1, 3)))
+
+
+if __name__ == '__main__':
+    unittest.main()
