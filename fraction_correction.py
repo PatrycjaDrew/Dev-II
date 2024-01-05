@@ -147,8 +147,8 @@ class Fraction:
         """
         exposant = other.numerator / other.denominator
 
-        num = self.numerator ** exposant
-        den = self.denominator ** exposant
+        num = int(self.numerator ** exposant)
+        den = int(self.denominator ** exposant)
 
         return Fraction(num, den)
 
@@ -240,4 +240,5 @@ if __name__ == "__main__":
     print(f"O/1 is_zero = {Fraction(0, 1).is_zero()}")
     print(f"3/3 is_integer = {a.is_integer()}")
     print(a.is_adjacent_to(b))
-    print(Fraction(4, 2))
+    print(a.is_adjacent_to(b))
+    print(f"1/3 ** 2/1 = {b ** Fraction(2, 1)}")
